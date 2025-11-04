@@ -1,76 +1,60 @@
-"use client";
-
-import * as React from "react";
-import Link from "next/link";
-import FAQItem from "@/components/Accordions/FAQItem";
-import Script from "next/script";
-import { buildFaqJsonLd, SITE_URL } from "@/lib/seo";
-
+import FAQClient from "./FAQClient";
+import { SITE_URL, buildFaqJsonLd } from "@/lib/seo";
 
 const WA_NUMBER = "6285702255674";
 const waText = encodeURIComponent("Halo, saya ingin bertanya tentang ayam potong Rifki.");
 const waLink = `https://wa.me/${WA_NUMBER}?text=${waText}`;
 
-const faqs: { q: string; a: React.ReactNode }[] = [
-  {
-    q: "Dari mana asal ayam yang dijual?",
-    a: "Dari pemasok lokal pilihan yang diawasi kualitasnya setiap hari.",
-  },
-  {
-    q: "Apakah proses pemotongan sudah higienis?",
-    a: "Ya. Proses dilakukan secara bersih, menggunakan sarung tangan & peralatan steril, dan area kerja rutin dibersihkan.",
-  },
-  {
-    q: "Bisa request potongan khusus?",
-    a: "Bisa. Potongan besar/kecil, fillet, dada/paha/sayap, hingga custom sesuai kebutuhan Anda.",
-  },
-  {
-    q: "Berapa minimal order?",
-    a: "Tidak ada minimal untuk pembelian ecer. Untuk pesanan besar/hajatan, diskusikan terlebih dahulu via WhatsApp.",
-  },
-  {
-    q: "Jam operasional buka kapan?",
-    a: "Setiap hari, pukul 05.00 – 17.00 WIB (menyesuaikan ketersediaan stok).",
-  },
-  {
-    q: "Apakah ada layanan pengantaran?",
-    a: "Ya, untuk area Baturraden & sekitarnya (syarat & ketentuan berlaku).",
-  },
-  {
-    q: "Bagaimana sistem pembayaran?",
-    a: "Tunai atau transfer bank/QRIS. Untuk pesanan besar, bisa DP sesuai kesepakatan.",
-  },
-  {
-    q: "Cara pesan yang tercepat bagaimana?",
-    a: (
-      <>
-        Klik tombol <strong>Pesan/Hubungi via WhatsApp</strong> dan sebutkan
-        jenis potongan, jumlah, dan lokasi Anda.
-      </>
-    ),
-  },
-];
-
 export const metadata = {
   title: "FAQ",
   description: "Pertanyaan umum seputar Ayam Potong Rifki",
   alternates: { canonical: "/faq" },
-  openGraph: { url: `${SITE_URL}/faq` }
+  openGraph: {
+    url: `${SITE_URL}/faq`,
+    title: "FAQ — Ayam Potong Rifki",
+    description: "Pertanyaan umum seputar Ayam Potong Rifki",
+  },
 };
 
-export default function FAQPage() {
-  const jsonLd = buildFaqJsonLd(faqs);
-  const [openIndex, setOpenIndex] = React.useState<number | null>(0);
+// Data untuk UI (boleh ReactNode)
+const faqsUI: { q: string; a: React.ReactNode }[] = [
+  { q: "Dari mana asal ayam yang dijual?", a: "Dari pemasok lokal pilihan yang diawasi kualitasnya setiap hari." },
+  { q: "Apakah proses pemotongan sudah higienis?", a: "Ya. Proses dilakukan secara bersih, menggunakan sarung tangan & peralatan steril, dan area kerja rutin dibersihkan." },
+  { q: "Bisa request potongan khusus?", a: "Bisa. Potongan besar/kecil, fillet, dada/paha/sayap, hingga custom sesuai kebutuhan Anda." },
+  { q: "Berapa minimal order?", a: "Tidak ada minimal untuk pembelian ecer. Untuk pesanan besar/hajatan, diskusikan terlebih dahulu via WhatsApp." },
+  { q: "Jam operasional buka kapan?", a: "Setiap hari, pukul 05.00 – 17.00 WIB (menyesuaikan ketersediaan stok)." },
+  { q: "Apakah ada layanan pengantaran?", a: "Ya, untuk area Baturraden & sekitarnya (syarat & ketentuan berlaku)." },
+  { q: "Bagaimana sistem pembayaran?", a: "Tunai atau transfer bank/QRIS. Untuk pesanan besar, bisa DP sesuai kesepakatan." },
+  {
+    q: "Cara pesan yang tercepat bagaimana?",
+    a: <>Klik tombol <strong>Pesan/Hubungi via WhatsApp</strong> dan sebutkan jenis potongan, jumlah, dan lokasi Anda.</>,
+  },
+];
 
-  const toggle = (i: number) =>
-    setOpenIndex((prev) => (prev === i ? null : i)); // ❗ single-open
+// Versi khusus JSON-LD (harus string murni)
+const faqsJson = [
+  { q: "Dari mana asal ayam yang dijual?", a: "Dari pemasok lokal pilihan yang diawasi kualitasnya setiap hari." },
+  { q: "Apakah proses pemotongan sudah higienis?", a: "Ya. Proses dilakukan secara bersih, menggunakan sarung tangan & peralatan steril, dan area kerja rutin dibersihkan." },
+  { q: "Bisa request potongan khusus?", a: "Bisa. Potongan besar/kecil, fillet, dada/paha/sayap, hingga custom sesuai kebutuhan Anda." },
+  { q: "Berapa minimal order?", a: "Tidak ada minimal untuk pembelian ecer. Untuk pesanan besar/hajatan, diskusikan terlebih dahulu via WhatsApp." },
+  { q: "Jam operasional buka kapan?", a: "Setiap hari, pukul 05.00 – 17.00 WIB (menyesuaikan ketersediaan stok)." },
+  { q: "Apakah ada layanan pengantaran?", a: "Ya, untuk area Baturraden & sekitarnya (syarat & ketentuan berlaku)." },
+  { q: "Bagaimana sistem pembayaran?", a: "Tunai atau transfer bank/QRIS. Untuk pesanan besar, bisa DP sesuai kesepakatan." },
+  { q: "Cara pesan yang tercepat bagaimana?", a: "Klik tombol Pesan/Hubungi via WhatsApp dan sebutkan jenis potongan, jumlah, dan lokasi Anda." },
+];
+
+export default function FAQPage() {
+  const jsonLd = buildFaqJsonLd(faqsJson);
 
   return (
     <>
-      <Script id="ld-faq" type="application/ld+json">
-        {JSON.stringify(jsonLd)}
-      </Script>
-      {/* HERO style FAQ */}
+      {/* JSON-LD (server-safe) */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
+      {/* HERO */}
       <header className="bg-linear-to-b from-emerald-50 to-white">
         <div className="mx-auto max-w-7xl px-5 pt-14 pb-10 md:pt-16 md:pb-12">
           <div className="mx-auto max-w-3xl text-center">
@@ -87,23 +71,10 @@ export default function FAQPage() {
         </div>
       </header>
 
+      {/* LIST */}
+      <FAQClient faqs={faqsUI} />
 
-      {/* Daftar FAQ */}
-      <section className="mx-auto max-w-4xl px-5 pb-14">
-        <div className="space-y-4">
-          {faqs.map((f, i) => (
-            <FAQItem
-              key={f.q}
-              question={f.q}
-              answer={f.a}
-              isOpen={openIndex === i}
-              onToggle={() => toggle(i)}
-            />
-          ))}
-        </div>
-      </section>
-
-      {/* CTA bawah */}
+      {/* CTA */}
       <section className="mx-auto max-w-7xl px-5 pb-16">
         <div className="rounded-2xl border border-emerald-100 bg-linear-to-b from-emerald-50 to-white p-8 text-center shadow-[0_16px_50px_rgba(16,185,129,.12)] md:p-12">
           <h2 className="text-[clamp(1.6rem,3vw,2.2rem)] font-extrabold text-emerald-900">
