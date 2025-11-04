@@ -1,7 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 // src/app/produk/page.tsx
 import Link from "next/link";
-
+import Script from "next/script";
+import { buildBreadcrumbJsonLd} from "@/lib/seo";
+import { ogMeta, SITE_URL } from "@/lib/seo";
 const WA_NUMBER = "6285702255674";
 const wa = (text: string) =>
   `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
@@ -15,6 +17,13 @@ type Product = {
   bulletsRight?: string[];  // poin kanan (opsional)
   waMsg: string;
 };
+
+export const metadata = ogMeta({
+  title: "Produk – Ayam Potong Rifki",
+  description: "Pilihan ayam potong segar: broiler, kampung, custom potongan, dan kebutuhan hajatan.",
+  path: "/produk",
+  image: "/images/og/og-produk.jpg", // kalau ada; kalau belum, biarkan default
+});
 
 const PRODUCTS: Product[] = [
   {
@@ -148,8 +157,15 @@ function ProductWideCard({
 /* ---------------- page ---------------- */
 
 export default function ProdukPage() {
+  const crumbs = buildBreadcrumbJsonLd([
+    { name: "Beranda", url: SITE_URL },
+    { name: "Produk", url: `${SITE_URL}/produk` }
+  ]);
   return (
     <>
+      <Script id="ld-breadcrumb-produk" type="application/ld+json">
+        {JSON.stringify(crumbs)}
+      </Script>
       {/* HERO PRODUK */}
       <div className="bg-linear-to-b from-emerald-50 to-white">
         <section className="mx-auto max-w-7xl px-5 pt-12 pb-6 md:pt-16 md:pb-10 text-center">

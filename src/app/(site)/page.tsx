@@ -1,6 +1,8 @@
 // src/app/(site)/page.tsx
 import Image from "next/image";
 import Link from "next/link";
+import Script from "next/script";
+import { localBusinessJsonLd } from "@/lib/seo";
 
 import Hero from "@/components/Hero";
 import FeatureCard from "@/components/Cards/FeatureCard";
@@ -28,6 +30,9 @@ const PRODUCTS = [
 export default function HomePage() {
   return (
     <>
+      <Script id="ld-localbusiness" type="application/ld+json">
+        {JSON.stringify(localBusinessJsonLd)}
+      </Script>
       {/* HERO */}
       <Hero
         badge="Segar · Higienis · Terpercaya"

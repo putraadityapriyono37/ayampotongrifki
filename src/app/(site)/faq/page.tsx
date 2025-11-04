@@ -3,6 +3,9 @@
 import * as React from "react";
 import Link from "next/link";
 import FAQItem from "@/components/Accordions/FAQItem";
+import Script from "next/script";
+import { buildFaqJsonLd, SITE_URL } from "@/lib/seo";
+
 
 const WA_NUMBER = "6285702255674";
 const waText = encodeURIComponent("Halo, saya ingin bertanya tentang ayam potong Rifki.");
@@ -48,7 +51,15 @@ const faqs: { q: string; a: React.ReactNode }[] = [
   },
 ];
 
+export const metadata = {
+  title: "FAQ",
+  description: "Pertanyaan umum seputar Ayam Potong Rifki",
+  alternates: { canonical: "/faq" },
+  openGraph: { url: `${SITE_URL}/faq` }
+};
+
 export default function FAQPage() {
+  const jsonLd = buildFaqJsonLd(faqs);
   const [openIndex, setOpenIndex] = React.useState<number | null>(0);
 
   const toggle = (i: number) =>
@@ -56,6 +67,9 @@ export default function FAQPage() {
 
   return (
     <>
+      <Script id="ld-faq" type="application/ld+json">
+        {JSON.stringify(jsonLd)}
+      </Script>
       {/* HERO style FAQ */}
       <header className="bg-linear-to-b from-emerald-50 to-white">
         <div className="mx-auto max-w-7xl px-5 pt-14 pb-10 md:pt-16 md:pb-12">
@@ -72,7 +86,7 @@ export default function FAQPage() {
           </div>
         </div>
       </header>
-      
+
 
       {/* Daftar FAQ */}
       <section className="mx-auto max-w-4xl px-5 pb-14">

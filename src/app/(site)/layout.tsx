@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { localBusinessJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: {
@@ -18,11 +19,11 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }], // opsional
   },
   // opsional: tambahkan open graph/og:image bila perlu
-  // openGraph: {
-  //   title: "Ayam Potong Rifki",
-  //   description: "Segar, Bersih, Siap Masak",
-  //   images: ["/og-image.png"],
-  // },
+  openGraph: {
+    title: "Ayam Potong Rifki",
+    description: "Segar, Bersih, Siap Masak",
+    images: ["images/og/og-home.jpg"],
+  },
 };
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
@@ -31,6 +32,10 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <Navbar />
       {/* jaga tinggi minimum konten; var(--nav-h) sudah di-set di Navbar */}
       <main className="min-h-[calc(100svh-var(--nav-h))]">{children}</main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
+      />
       <Footer />
     </>
   );
