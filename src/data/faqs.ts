@@ -1,0 +1,18 @@
+export const faqs = [
+  { q: "Dari mana asal ayam yang dijual?",
+    a: "Dari pemasok terpercaya, dipilih segar setiap hari." },
+  { q: "Apakah proses pemotongan sudah higienis?",
+    a: "Ya, standar kebersihan ketat dan penanganan higienis." },
+  { q: "Bisa request potongan khusus?",
+    a: "Bisa. Sampaikan detail potongannya saat pesan." },
+  { q: "Berapa minimal order?",
+    a: "Eceran bisa. Untuk hajatan, minimal 10 ekor mendapat harga spesial." },
+  { q: "Jam operasional?",
+    a: "Senin–Minggu, 05.00–17.00 WIB." },
+  { q: "Apakah ada layanan pengantaran?",
+    a: "Area Baturraden & sekitar, sesuai kesepakatan." },
+  { q: "Metode pembayaran?",
+    a: "Tunai atau transfer bank lokal." },
+  { q: "Cara pesan tercepat?",
+    a: "Klik tombol WhatsApp di laman mana pun." },
+];
