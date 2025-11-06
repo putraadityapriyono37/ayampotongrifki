@@ -2,39 +2,63 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { localBusinessJsonLd } from "@/lib/seo";
+import { SITE_URL, localBusinessJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL), // bikin URL OG/Canonicals jadi absolut
   title: {
     default: "Ayam Potong Rifki",
     template: "%s · Ayam Potong Rifki",
   },
   description: "Segar, Bersih, Siap Masak",
   icons: {
-    // Next akan pakai salah satu dari ini. Pastikan file ada.
     icon: [
-      { url: "/favicon.ico", sizes: "any" },       // opsional (ICO)
-      { url: "/icon.png", type: "image/png" },     // /public/icon.png atau /app/(site)/icon.png
+      { url: "/favicon.ico", sizes: "any" },         // opsional
+      { url: "/icon.png", type: "image/png" },       // /public/icon.png
     ],
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }], // opsional
   },
-  // opsional: tambahkan open graph/og:image bila perlu
   openGraph: {
+    type: "website",
+    url: SITE_URL,
+    siteName: "Ayam Potong Rifki",
     title: "Ayam Potong Rifki",
     description: "Segar, Bersih, Siap Masak",
-    images: ["images/og/og-home.jpg"],
+    images: [
+      {
+        url: "/images/og/og-home.jpg",  // pastikan file ada & 1200x630
+        width: 1200,
+        height: 630,
+        alt: "Ayam Potong Rifki – Segar, Bersih, Siap Masak",
+      },
+    ],
+    locale: "id_ID",
   },
+  // >>> Tambahkan verifikasi Google di sini <<<
+  verification: {
+    google: "Nyrhj7bWwN_p3cgj_AfIUGkGPZOFGnKS30EMYvllVdw",
+  },
+  // Jika `verification` belum tersedia di versi Next kamu,
+  // pakai alternatif berikut:
+  // other: {
+  //   "google-site-verification": "Nyrhj7bWwN_p3cgj_AfIUGkGPZOFGnKS30EMYvllVdw",
+  // },
 };
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Navbar />
-      {/* jaga tinggi minimum konten; var(--nav-h) sudah di-set di Navbar */}
+      {/* jaga tinggi minimum konten; var(--nav-h) di-set di Navbar */}
       <main className="min-h-[calc(100svh-var(--nav-h))]">{children}</main>
+
+      {/* JSON-LD LocalBusiness */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
+        // aman karena value berasal dari konstanta kita sendiri
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(localBusinessJsonLd),
+        }}
       />
       <Footer />
     </>
