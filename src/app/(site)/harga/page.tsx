@@ -1,48 +1,31 @@
-/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
+import { getPrices } from "@/lib/prices";
+import { getSettings } from "@/lib/settings";
 
-/* ---------- kecil: ikon ---------- */
 const Percent = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" aria-hidden {...props}>
     <path fill="currentColor" d="m19 5l-1-1L5 17l1 1L19 5ZM7 9a2 2 0 1 0 0-4a2 2 0 0 0 0 4Zm10 10a2 2 0 1 0 0-4a2 2 0 0 0 0 4Z"/>
   </svg>
 );
+
 const Check = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" aria-hidden {...props}>
     <path fill="currentColor" d="M9 16.2 4.8 12 3.4 13.4 9 19l12-12-1.4-1.4z"/>
   </svg>
 );
+
 const Day247 = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" aria-hidden {...props}>
     <path fill="currentColor" d="M12 2a10 10 0 1 0 10 10A10.012 10.012 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8a8.009 8.009 0 0 1-8 8Zm.5-13h-1v6l5 3l.5-.87l-4.5-2.63V7Z"/>
   </svg>
 );
+
 const WaIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" aria-hidden {...props}>
     <path fill="currentColor" d="M20 3.5A10.5 10.5 0 0 0 3.08 17.6L2 22l4.53-1.19A10.46 10.46 0 0 0 12 21a10.5 10.5 0 0 0 8-17.5Z"/>
   </svg>
 );
 
-/* ---------- data ---------- */
-const WA = "6285702255674";
-const waText = encodeURIComponent("Halo Rifki, saya ingin menanyakan daftar harga terbaru & ketersediaan stok.");
-const waLink = `https://wa.me/${WA}?text=${waText}`;
-
-type Row = { produk: string; satuan: string; harga: string; href?: string };
-
-const HARGA: Row[] = [
-  { produk: "Ayam Broiler Utuh", satuan: "per ekor", harga: "Rp 35.000 – 45.000" },
-  { produk: "Paha Atas Broiler", satuan: "per kg",   harga: "Rp 40.000 – 45.000" },
-  { produk: "Paha Bawah Broiler", satuan: "per kg", harga: "Rp 38.000 – 43.000" },
-  { produk: "Dada Fillet Broiler", satuan: "per kg", harga: "Rp 45.000 – 50.000" },
-  { produk: "Sayap Broiler",       satuan: "per kg", harga: "Rp 35.000 – 40.000" },
-  { produk: "Ceker Ayam",          satuan: "per kg", harga: "Rp 25.000 – 30.000" },
-  { produk: "Ayam Kampung Utuh",   satuan: "per ekor", harga: "Rp 70.000 – 90.000" },
-  { produk: "Ayam Kampung Potong", satuan: "per kg",   harga: "Rp 50.000 – 60.000" },
-  { produk: "Paket Hajatan (10 ekor+)", satuan: "paket", harga: "Harga spesial – hubungi", href: waLink },
-];
-
-/* ---------- kartu kecil ---------- */
 function MiniFeature({
   icon,
   title,
@@ -63,11 +46,19 @@ function MiniFeature({
   );
 }
 
-/* ---------- page ---------- */
-export default function HargaPage() {
+export default async function HargaPage() {
+  const prices = await getPrices();
+  const settings = await getSettings();
+
+  const waText = encodeURIComponent(
+    "Halo Rifki, saya ingin menanyakan daftar harga terbaru & ketersediaan stok."
+  );
+
+  const whatsapp = settings.whatsapp ?? "6285702255674";
+
+  const waLink = `https://wa.me/${whatsapp}?text=${waText}`;
   return (
     <>
-      {/* HERO heading */}
       <header className="bg-linear-to-b from-emerald-50 to-white">
         <div className="mx-auto max-w-7xl px-5 pt-14 pb-10 md:pt-16 md:pb-12">
           <div className="mx-auto max-w-3xl text-center">
@@ -84,7 +75,6 @@ export default function HargaPage() {
         </div>
       </header>
 
-      {/* TABEL HARGA */}
       <section className="mx-auto max-w-7xl px-5 pb-8">
         <div className="overflow-hidden rounded-2xl border border-emerald-100 bg-white shadow-[0_20px_60px_rgba(16,185,129,.10)]">
           <table className="min-w-full divide-y divide-emerald-100">
@@ -96,20 +86,23 @@ export default function HargaPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-emerald-50">
-              {HARGA.map((row, i) => (
-                <tr key={i} className="text-slate-700">
-                  <td className="px-5 py-4">{row.produk}</td>
+              {prices.map((row) => (
+                <tr key={row.id} className="text-slate-700">
+                  <td className="px-5 py-4">{row.product_name}</td>
                   <td className="px-5 py-4 text-slate-500">{row.satuan}</td>
                   <td className="px-5 py-4">
-                    {row.href ? (
+                    {row.product_key === "hajatan" ? (
                       <Link
-                        href={row.href}
+                        href={waLink}
                         className="font-semibold text-emerald-700 underline decoration-emerald-300 underline-offset-4 hover:text-emerald-600"
                       >
-                        {row.harga}
+                        Harga Spesial – Hubungi
                       </Link>
                     ) : (
-                      <span className="font-semibold text-emerald-800">{row.harga}</span>
+                      <span className="font-semibold text-emerald-800">
+                        Rp {row.min_price.toLocaleString("id-ID")} – Rp{" "}
+                        {row.max_price.toLocaleString("id-ID")}
+                      </span>
                     )}
                   </td>
                 </tr>
@@ -118,7 +111,6 @@ export default function HargaPage() {
           </table>
         </div>
 
-        {/* catatan */}
         <div className="mt-4 rounded-xl border border-emerald-100 bg-emerald-50/50 p-4 text-[15px] text-slate-700">
           <span className="font-semibold text-emerald-900">Catatan:</span>{" "}
           Harga dapat berubah mengikuti kondisi pasar. Silakan konfirmasi via
@@ -126,7 +118,6 @@ export default function HargaPage() {
         </div>
       </section>
 
-      {/* CTA tanya harga */}
       <section className="bg-linear-to-b from-white to-emerald-50/40">
         <div className="mx-auto max-w-7xl px-5 py-14 md:py-16 text-center">
           <h2 className="text-[clamp(1.8rem,3.5vw,2.4rem)] font-extrabold text-emerald-950">
@@ -148,7 +139,6 @@ export default function HargaPage() {
         </div>
       </section>
 
-      {/* 3 poin keunggulan */}
       <section className="mx-auto max-w-7xl px-5 pb-16">
         <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
           <MiniFeature

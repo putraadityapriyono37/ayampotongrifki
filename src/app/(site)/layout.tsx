@@ -1,66 +1,69 @@
-// src/app/(site)/layout.tsx
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { SITE_URL, localBusinessJsonLd } from "@/lib/seo";
+import { getSettings } from "@/lib/settings"; // ✅ import
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL), // bikin URL OG/Canonicals jadi absolut
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Ayam Potong Rifki",
     template: "%s · Ayam Potong Rifki",
   },
-  description: "Segar, Bersih, Siap Masak",
+  description: "Segar • Bersih • Terpercaya • Halal",
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "any" },         // opsional
-      { url: "/icon.png", type: "image/png" },       // /public/icon.png
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", type: "image/png" },
     ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }], // opsional
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180" },
+    ],
   },
   openGraph: {
     type: "website",
     url: SITE_URL,
     siteName: "Ayam Potong Rifki",
     title: "Ayam Potong Rifki",
-    description: "Segar, Bersih, Siap Masak",
+    description: "Segar • Bersih • Terpercaya • Halal",
     images: [
       {
-        url: "/images/og/og-home.jpg",  // pastikan file ada & 1200x630
+        url: "/images/og/og-home.jpg",
         width: 1200,
         height: 630,
-        alt: "Ayam Potong Rifki – Segar, Bersih, Siap Masak",
+        alt: "Ayam Potong Rifki",
       },
     ],
     locale: "id_ID",
   },
-  // >>> Tambahkan verifikasi Google di sini <<<
   verification: {
     google: "Nyrhj7bWwN_p3cgj_AfIUGkGPZOFGnKS30EMYvllVdw",
   },
-  // Jika `verification` belum tersedia di versi Next kamu,
-  // pakai alternatif berikut:
-  // other: {
-  //   "google-site-verification": "Nyrhj7bWwN_p3cgj_AfIUGkGPZOFGnKS30EMYvllVdw",
-  // },
 };
 
-export default function SiteLayout({ children }: { children: React.ReactNode }) {
+export default async function SiteLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const settings = await getSettings(); // ✅ ambil settings
+
   return (
     <>
-      <Navbar />
-      {/* jaga tinggi minimum konten; var(--nav-h) di-set di Navbar */}
-      <main className="min-h-[calc(100svh-var(--nav-h))]">{children}</main>
+      <Navbar settings={settings} /> {/* ✅ kirim ke Navbar */}
 
-      {/* JSON-LD LocalBusiness */}
+      <main className="min-h-[calc(100svh-var(--nav-h))]">
+        {children}
+      </main>
+
       <script
         type="application/ld+json"
-        // aman karena value berasal dari konstanta kita sendiri
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(localBusinessJsonLd),
         }}
       />
-      <Footer />
+
+      <Footer /> {/* Footer sudah mandiri */}
     </>
   );
 }

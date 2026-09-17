@@ -1,8 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+
+interface NavbarProps {
+  settings?: Record<string, string> | null;
+}
 
 const NAV = [
   { href: "/", label: "Beranda" },
@@ -13,48 +18,45 @@ const NAV = [
   { href: "/kontak", label: "Kontak" },
 ];
 
-export default function Navbar() {
+export default function Navbar({ settings = {} }: NavbarProps) {
   const pathname = usePathname() || "/";
   const [open, setOpen] = useState(false);
 
   const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(href + "/");
+    href === "/"
+      ? pathname === "/"
+      : pathname === href || pathname.startsWith(href + "/");
+
+  // Fallback yang aman
+  const businessName = settings?.business_name ?? "Ayam Potong Rifki";
+  const tagline = settings?.tagline ?? "Segar • Bersih • Terpercaya • Halal";
 
   return (
     <header
-      className="
-        sticky top-0 z-50
-        bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60
-        shadow-sm
-        [--nav-h:76px] md:[--nav-h:88px]
-        overflow-x-clip
-      "
+      suppressHydrationWarning
+      className="sticky top-0 z-50 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 shadow-sm [--nav-h:76px] md:[--nav-h:88px] overflow-x-clip"
     >
-      <nav
-        className="
-          mx-auto max-w-7xl h-[var(--nav-h)]
-          px-5 md:px-6
-          flex items-center justify-between
-        "
-      >
+      <nav className="mx-auto max-w-7xl h-[var(--nav-h)] px-5 md:px-6 flex items-center justify-between">
         {/* Brand */}
         <Link href="/" className="flex items-center gap-4">
-          <img
+          <Image
             src="/logo-ayam-rifki.png"
-            alt="Ayam Potong Rifki"
+            alt={businessName}
+            width={44}
+            height={44}
             className="h-11 w-11 rounded"
           />
           <div className="leading-tight">
             <p className="text-[18px] md:text-[20px] font-semibold text-emerald-700 tracking-[0.2px]">
-              Ayam Potong Rifki
+              {businessName}
             </p>
             <p className="text-[13.5px] md:text-[14px] text-slate-400 -mt-0.5 tracking-[0.2px]">
-              Segar, Bersih, Siap Masak
+              {tagline}
             </p>
           </div>
         </Link>
 
-        {/* Desktop menu */}
+        {/* Desktop Menu */}
         <ul className="hidden md:flex items-center gap-7 md:gap-9 lg:gap-11">
           {NAV.map((n) => (
             <li key={n.href}>
@@ -76,18 +78,13 @@ export default function Navbar() {
           ))}
         </ul>
 
-        {/* Hamburger (mobile) */}
+        {/* Hamburger */}
         <button
           type="button"
           aria-label={open ? "Tutup menu" : "Buka menu"}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
-          className="
-            md:hidden relative inline-flex h-11 w-11 items-center justify-center
-            rounded-md bg-white text-slate-700
-            ring-1 ring-slate-200 shadow-sm
-            focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40
-          "
+          className="md:hidden relative inline-flex h-11 w-11 items-center justify-center rounded-md bg-white text-slate-700 ring-1 ring-slate-200 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40"
         >
           <span
             aria-hidden
@@ -110,15 +107,9 @@ export default function Navbar() {
         </button>
       </nav>
 
-      {/* Mobile drawer */}
+      {/* Mobile Menu */}
       {open && (
-        <div
-          className="
-            md:hidden bg-white
-            border-t border-slate-200
-            shadow-[0_8px_24px_rgba(2,6,23,.06)]
-          "
-        >
+        <div className="md:hidden bg-white border-t border-slate-200 shadow-[0_8px_24px_rgba(2,6,23,.06)]">
           <ul className="mx-auto max-w-7xl px-5 py-3 space-y-1 pb-[max(12px,env(safe-area-inset-bottom))]">
             {NAV.map((n) => (
               <li key={n.href}>
