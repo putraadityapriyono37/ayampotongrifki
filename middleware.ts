@@ -6,9 +6,20 @@ export async function middleware(request: NextRequest) {
     request,
   });
 
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error(
+      "[Middleware] Missing Supabase env vars. Pastikan NEXT_PUBLIC_SUPABASE_URL dan " +
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY sudah di-set di .env.local (lokal) " +
+        "atau Vercel Dashboard → Settings → Environment Variables (production)."
+    );
+  }
+
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseAnonKey,
     {
       cookies: {
         getAll() {
